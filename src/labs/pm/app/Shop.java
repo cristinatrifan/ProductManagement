@@ -8,8 +8,10 @@
 
 package labs.pm.app;
 
-import labs.pm.data.Product;
+import labs.pm.data.*;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  *
@@ -20,11 +22,25 @@ import java.math.BigDecimal;
 public class Shop {
 
     public static void main(String[] args) {
-	Product p1 = new Product();
-	p1.setId(101);
-	p1.setName("Tea");
-	p1.setPrice(BigDecimal.valueOf(1.99));
+        ProductManager manager = new ProductManager();
 
-	System.out.println(p1.getId()+" "+p1.getName()+" "+p1.getPrice()+" "+p1.getDiscount());//the run button compiles the code, it runs javac and then java
+	Product p1 = manager.createProduct(101, "Tea", BigDecimal.valueOf(1.99), Rating.THREE_STAR);
+	Product p2 = manager.createProduct(102, "Coffee", BigDecimal.valueOf(1.99), Rating.FOUR_STAR);
+	Product p3 = manager.createProduct(103, "Cake", BigDecimal.valueOf(3.99), Rating.FIVE_STAR, LocalDate.now().plusDays(2));
+	Product p4 = manager.createProduct(105, "Cookie", BigDecimal.valueOf(3.99), Rating.TWO_STAR, LocalDate.now().plusDays(2));
+	Product p5 = p3.applyRating(Rating.THREE_STAR);
+	Product p6 = manager.createProduct(104, "Chocolate", BigDecimal.valueOf(2.99), Rating.FIVE_STAR);
+	Product p7 = manager.createProduct(104, "Chocolate", BigDecimal.valueOf(2.99), Rating.FIVE_STAR, LocalDate.now().plusDays(2));
+    System.out.println(p6.equals(p7));
+
+	//System.out.println(p1.getId()+" "+p1.getName()+" "+p1.getPrice()+" "+p1.getDiscount()+" "+p1.getRating().getStars());//the run button compiles the code, it runs javac and then java
+
+        System.out.println(p1);
+        System.out.println(p2);
+        System.out.println(p3);
+        System.out.println(p4);
+        System.out.println(p5);
+        System.out.println(p6);
+        System.out.println(p7);
     }
 }

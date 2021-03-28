@@ -9,6 +9,9 @@
 package labs.pm.data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
+
 import static java.math.RoundingMode.HALF_UP;
 
 /**
@@ -20,14 +23,36 @@ import static java.math.RoundingMode.HALF_UP;
  * @author oracle
  * @version 1.0.0
  */
-public class Product {
+public abstract class Product {
     private int id;
     private String name;
     private BigDecimal price;
+    private Rating rating;
     /**
      * this is a discount rate of type {@link BigDecimal}
      */
     public static final BigDecimal DISCOUNT_RATE = BigDecimal.valueOf(0.1);
+
+    Product(int id, String name, BigDecimal price, Rating rating) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.rating = rating;
+    };
+
+    Product(int id, String name, BigDecimal price) {
+        this(id, name, price, Rating.NOT_RATED);
+    }
+
+    //Product() { //constructor for default values, if you want any
+      //  this(0, "no name", BigDecimal.ZERO);
+    //}
+
+    public abstract Product applyRating(Rating newRating);//this method doesn't have a generic fallback behaviour
+
+    public LocalDate getBestBefore() { //this method has a generic fallback behaviour
+        return LocalDate.now();
+    }
 
     /**
      * calculates discount based on price discount
@@ -41,24 +66,35 @@ public class Product {
         return id;
     }
 
-    public void setId(final int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(final BigDecimal price) {
-        this.price = price;
+    public Rating getRating() {
+        return rating;
     }
 
+    @Override
+    public String toString() {
+        return id+" "+name+" "+price+" "+this.getDiscount()+" "+this.getRating().getStars()+" "+this.getBestBefore();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        //if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return id == product.id &&
+                Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

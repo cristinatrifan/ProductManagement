@@ -23,7 +23,7 @@ import static java.math.RoundingMode.HALF_UP;
  * @author oracle
  * @version 1.0.0
  */
-public abstract class Product {
+public abstract class Product implements Rateable<Product> {
     private int id;
     private String name;
     private BigDecimal price;
@@ -74,6 +74,7 @@ public abstract class Product {
         return price;
     }
 
+    @Override
     public Rating getRating() {
         return rating;
     }

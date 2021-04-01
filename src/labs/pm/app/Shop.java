@@ -26,9 +26,14 @@ public class Shop {
         ProductManager manager = new ProductManager(Locale.UK);
 
 	Product p1 = manager.createProduct(101, "Tea", BigDecimal.valueOf(1.99), Rating.NOT_RATED);
-	manager.printProductReport();
+	manager.printProductReport(101);
+	manager.reviewProduct(101, Rating.FOUR_STAR, "Nice hot cuppa");
+	manager.reviewProduct(101, Rating.FOUR_STAR, "Nice hot cuppa");
+	manager.reviewProduct(101, Rating.FOUR_STAR, "Nice hot cuppa");
+	manager.reviewProduct(p1, Rating.FOUR_STAR, "Nice hot cuppa tea");
 	manager.reviewProduct(p1, Rating.FOUR_STAR, "Nice hot cuppa");
-	manager.printProductReport();
+	manager.reviewProduct(p1, Rating.FOUR_STAR, "Nice hot cuppa");
+	manager.printProductReport(p1);
 
 	Product p2 = manager.createProduct(102, "Coffee", BigDecimal.valueOf(1.99), Rating.FOUR_STAR);
 	Product p3 = manager.createProduct(103, "Cake", BigDecimal.valueOf(3.99), Rating.FIVE_STAR, LocalDate.now().plusDays(2));

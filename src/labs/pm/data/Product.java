@@ -38,7 +38,7 @@ public abstract class Product implements Rateable<Product> {
         this.name = name;
         this.price = price;
         this.rating = rating;
-    };
+    }
 
     Product(int id, String name, BigDecimal price) {
         this(id, name, price, Rating.NOT_RATED);
@@ -90,8 +90,8 @@ public abstract class Product implements Rateable<Product> {
         //if (o == null || getClass() != o.getClass()) return false;
         if (!(o instanceof Product)) return false;
         Product product = (Product) o;
-        return id == product.id &&
-                Objects.equals(name, product.name);
+        return id == product.id ;
+        //&& Objects.equals(name, product.name);
     }
 
     @Override

@@ -11,8 +11,13 @@ package labs.pm.app;
 import labs.pm.data.*;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
  *
@@ -22,20 +27,25 @@ import java.util.Locale;
  */
 public class Shop {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ProductManagerException, ParseException {
         ProductManager manager = new ProductManager(Locale.UK);
+		//manager.changeLocale("fr-FR"); //works
 
 	Product p1 = manager.createProduct(101, "Tea", BigDecimal.valueOf(1.99), Rating.NOT_RATED);
-	manager.printProductReport(101);
+	//manager.printProductReport(42);
 	manager.reviewProduct(101, Rating.FOUR_STAR, "Nice hot cuppa");
 	manager.reviewProduct(101, Rating.FOUR_STAR, "Nice hot cuppa");
 	manager.reviewProduct(101, Rating.FOUR_STAR, "Nice hot cuppa");
 	manager.reviewProduct(p1, Rating.FOUR_STAR, "Nice hot cuppa tea");
 	manager.reviewProduct(p1, Rating.FOUR_STAR, "Nice hot cuppa");
 	manager.reviewProduct(p1, Rating.FOUR_STAR, "Nice hot cuppa");
+	//manager.parseReview("101,x,Nice hot cuppa parse");
+	manager.parseReview("101,4,Nice hot cuppa parse");
 	manager.printProductReport(p1);
 
 	Product p2 = manager.createProduct(102, "Coffee", BigDecimal.valueOf(1.99), Rating.FOUR_STAR);
+	manager.parseProduct("F,107,Cake parse,3.99,4,2021-09-08");
+		manager.printProductReport(107);
 	Product p3 = manager.createProduct(103, "Cake", BigDecimal.valueOf(3.99), Rating.FIVE_STAR, LocalDate.now().plusDays(2));
 	Product p4 = manager.createProduct(105, "Cookie", BigDecimal.valueOf(3.99), Rating.TWO_STAR, LocalDate.now().plusDays(2));
 	Product p5 = p3.applyRating(Rating.THREE_STAR);
@@ -52,5 +62,31 @@ public class Shop {
         System.out.println(p5);
         System.out.println(p6);
         System.out.println(p7);
+
+        System.out.println("\nprint report for all products based on rating: \n");
+        manager.printProducts(p -> p.getPrice().floatValue() < 2,
+        		(pr1, pr2) -> pr1.getRating().ordinal() - pr2.getRating().ordinal());
+		System.out.println("\nprint report for all products based on price: \n");
+        manager.printProducts(p -> p.getPrice().floatValue() < 2,
+				(pr1, pr2) -> pr1.getPrice().compareTo(pr2.getPrice()));
+
+		Comparator<Product> sorterByRating = new Comparator<Product>( ) {
+			@Override
+			public int compare(Product o1, Product o2) {
+				return o1.getRating().ordinal() - o2.getRating().ordinal();
+			}
+		};
+
+		Predicate<Product> filter = new Predicate<Product>( ) {
+
+			@Override
+			public boolean test(Product product) {
+				return product.getPrice().floatValue() < 2;
+			}
+		};
+
+		manager.printProducts(filter, sorterByRating.thenComparing((pr1, pr2) -> pr1.getPrice().compareTo(pr2.getPrice())).reversed());
+
+		manager.getDiscounts().forEach((rating, discount) -> System.out.println(rating + " " + discount));
     }
 }
